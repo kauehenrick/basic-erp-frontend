@@ -35,8 +35,6 @@ type PersonStoreProps = {
     updatePerson: (person: Omit<PersonProps, "isActive">) => void,
 };
 
-let nextId = 1;
-
 export const usePersonStore = create<PersonStoreProps>((set) => ({
     people: [],
     error: null,
@@ -98,7 +96,7 @@ export const usePersonStore = create<PersonStoreProps>((set) => ({
 
             set((state) => ({
                 people: state.people.map((p) =>
-                    p.id === person.id ? { ...p, isActive: false } : p
+                    p.id === person.id ? data : p
                 ),
                 error: null,
             }));
