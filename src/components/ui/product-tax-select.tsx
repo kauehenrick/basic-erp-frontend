@@ -16,12 +16,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { productTaxes } from "@/lib/productTax";
 import {
     FormField,
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
+import { useProductTaxStore } from "@/stores/ProductTaxStore";
 
 type ProductTaxComboboxProps = {
     form: UseFormReturn<any>;
@@ -30,6 +30,12 @@ type ProductTaxComboboxProps = {
 
 export default function ProductTaxCombobox(props: ProductTaxComboboxProps) {
     const [open, setOpen] = React.useState(false);
+
+    const { productTaxes, getProductTaxes } = useProductTaxStore();
+
+    React.useEffect(() => {
+        getProductTaxes();
+    }, [getProductTaxes]);
 
     return (
         <FormField

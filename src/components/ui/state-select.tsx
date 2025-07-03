@@ -1,6 +1,6 @@
 import * as React from "react";
 import { UseFormReturn } from "react-hook-form";
-
+import { useBrazilStateStore } from "@/stores/BrazilStateStore";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,6 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { estados } from "@/lib/brazilStates";
 import {
     FormField,
     FormItem,
@@ -31,12 +30,18 @@ type StateComboboxProps = {
 export default function StateCombobox(props: StateComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
+    const { brazilStates, getBrazilStates } = useBrazilStateStore();
+
+    React.useEffect(() => {
+        getBrazilStates();
+    }, [getBrazilStates]);
+
     return (
         <FormField
             control={props.form.control}
             name={props.name}
             render={({ field }) => {
-                const selectedOption = estados.find((estado) => estado.sigla === field.value);
+                const selectedOption = brazilStates.find((estado) => estado.sigla === field.value);
 
                 return (
                     <FormItem>
@@ -59,7 +64,7 @@ export default function StateCombobox(props: StateComboboxProps) {
                                     <CommandList>
                                         <CommandEmpty>Nenhum estado encontrado.</CommandEmpty>
                                         <CommandGroup>
-                                            {estados.map((estado) => (
+                                            {brazilStates.map((estado) => (
                                                 <CommandItem
                                                     key={estado.sigla}
                                                     value={estado.nome}

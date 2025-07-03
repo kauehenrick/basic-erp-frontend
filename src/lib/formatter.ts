@@ -34,16 +34,19 @@ export const cepFormatter = (v: string | undefined) => {
     return v;
 };
 
-export const realFormatter = (v: string | undefined) => {
-    if (!v) return '';
-    const number = String(v).replace(/\D/g, "");
+export const realFormatter = (v: number | string | undefined) => {
+    if (v === undefined || v === null) return '';
+
+    const number = typeof v === 'string' ? Number(v) : v;
+
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(Number(number) / 100);
+        maximumFractionDigits: 2,
+    }).format(number);
 };
+
 
 export const numberOnlyFormatter = (v: string | undefined) => {
     if (!v) return '';

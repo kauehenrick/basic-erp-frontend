@@ -17,10 +17,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { measures } from "@/lib/measures";
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { UseFormReturn } from "react-hook-form";
+import { useMeasureStore } from "@/stores/MeasureStore";
 
 type MeasureComboboxProps = {
     form: UseFormReturn<any>;
@@ -29,6 +29,12 @@ type MeasureComboboxProps = {
 
 export default function MeasureCombobox(props: MeasureComboboxProps) {
     const [open, setOpen] = React.useState(false);
+
+    const { measures, getMeasures } = useMeasureStore();
+
+    React.useEffect(() => {
+        getMeasures();
+    }, [getMeasures]);
 
     return (
         <FormField

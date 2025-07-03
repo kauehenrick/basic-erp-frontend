@@ -17,10 +17,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { invoiceTypes } from "@/lib/invoiceTypes";
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { UseFormReturn } from "react-hook-form";
+import { useInvoiceTypeStore } from "@/stores/InvoiceTypeStore";
 
 type InvoiceComboboxProps = {
     form: UseFormReturn<any>;
@@ -29,6 +29,12 @@ type InvoiceComboboxProps = {
 
 export default function InvoiceTypeCombobox(props: InvoiceComboboxProps) {
     const [open, setOpen] = React.useState(false);
+
+    const { invoiceTypes, getInvoiceTypes } = useInvoiceTypeStore();
+
+    React.useEffect(() => {
+        getInvoiceTypes();
+    }, [getInvoiceTypes]);
 
     return (
         <FormField

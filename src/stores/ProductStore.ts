@@ -1,6 +1,9 @@
+import { createClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { z } from "zod";
 import { create } from "zustand";
+
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 
 export const productFormSchema = z.object({
     id: z.number().optional(),
@@ -27,54 +30,106 @@ type ProductStoreProps = {
     updateProduct: (product: Omit<ProductProps, "isActive">) => void,
 };
 
-let nextId = 1;
-
 export const useProductStore = create<ProductStoreProps>((set) => ({
-    products: [{
-        id: 1,
-        isActive: true,
-        description: "Produto Padrão",
-        quantityInStock: 0,
-        purchasePrice: 0.0,
-        salePrice: 1.0,
-        measures: "UN",
-        NCMcode: "12345678",
-        CESTcode: "",
-        barcode: "",
-        productTax: "Isento"
-    }],
+    products: [],
     error: null,
-    getProducts: () => { },
-    addProduct: (product) => {
-        const newProduct = { ...product, id: nextId, isActive: true };
-        nextId++;
+
+    getProducts: async function getProducts() {
         try {
+            const { data, error } = await supabase.from("products").select("*");
+
+            if (error) {
+                toast("Erro ao buscar produtos!");
+                set({ error });
+                return;
+            }
+
+            set({ products: data, error: null });
+        } catch (err) {
+            toast("Erro inesperado ao buscar produtos!");
+            set({ error: err });
+        }
+    },
+
+    addProduct: async (product) => {
+        try {
+            const { data, error } = await supabase
+                .from("products")
+                .insert([{ ...product, isActive: true }])
+                .select()
+                .single();
+
+            if (error) {
+                toast("Erro ao cadastrar produto!");
+                set({ error });
+                return;
+            }
+
             set((state) => ({
-                products: [...state.products, newProduct]
-            }))
+                products: [...state.products, data],
+                error: null,
+            }));
+
             toast("Produto cadastrado!");
         } catch (error) {
-            toast("Erro ao cadastrar produto!");
+            toast("Erro inesperado ao cadastrar produto!");
+            set({ error });
         }
     },
-    disableProduct: (product) => {
+
+    disableProduct: async (product) => {
         try {
+            const { data, error } = await supabase
+                .from("products")
+                .update({ isActive: false })
+                .eq("id", product.id)
+                .select()
+                .single();
+
+            if (error) {
+                toast("Erro ao desabilitar produto!");
+                set({ error });
+                return;
+            }
+
             set((state) => ({
-                products: state.products.map((p) => p.id === product.id ? { ...p, isActive: false } : p)
+                products: state.products.map((p) =>
+                    p.id === product.id ? data : p
+                ),
+                error: null,
             }));
+
             toast("Produto desabilitado!");
         } catch (error) {
-            toast("Erro ao desabilitar produto!");
+            toast("Erro inesperado ao desabilitar produto!");
+            set({ error });
         }
     },
-    updateProduct: (product) => {
+
+    updateProduct: async (product) => {
         try {
+            const { data, error } = await supabase
+                .from("products")
+                .update(product)
+                .eq("id", product.id)
+                .select()
+                .single();
+
+            if (error) {
+                toast("Erro ao editar produto!");
+                set({ error });
+                return;
+            }
+
             set((state) => ({
-                products: state.products.map((p) => p.id === product.id ? { ...p, ...product } : p)
+                products: state.products.map((p) => (p.id === product.id ? data : p)),
+                error: null,
             }));
+
             toast("Produto editado!");
         } catch (error) {
-            toast("Erro ao editar produto!");
+            toast("Erro inesperado ao editar produto!");
+            set({ error });
         }
     },
 }));
