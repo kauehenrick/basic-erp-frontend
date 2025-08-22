@@ -13,7 +13,7 @@ export default function PersonDataTable() {
   const activePeople = people.filter(person => person.isActive);
 
   return (
-    <div className="container mt-4 mx-auto">
+    <div className="container mt-4">
       <DataTable columns={columns} data={activePeople} />
     </div>
   )

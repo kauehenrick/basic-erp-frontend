@@ -13,7 +13,7 @@ export default function ProductsDataTable() {
   const activeProduct = products.filter(product => product.isActive);
 
   return (
-    <div className="container mt-4 mx-auto">
+    <div className="container mt-4">
       <DataTable columns={columns} data={activeProduct} />
     </div>
   )

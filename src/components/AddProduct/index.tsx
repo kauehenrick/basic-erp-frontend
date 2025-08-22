@@ -69,7 +69,7 @@ export default function AddProduct() {
                     Adicionar
                 </Button>
             </DialogTrigger>
-            <DialogContent className="w-10/12">
+            <DialogContent className="w-11/12">
                 <DialogHeader>
                     <DialogTitle>Cadastrar Produto</DialogTitle>
                     <DialogDescription></DialogDescription>

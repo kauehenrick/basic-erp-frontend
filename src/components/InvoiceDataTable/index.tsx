@@ -6,7 +6,7 @@ export default function InvoiceDataTable() {
   const { invoices } = useInvoiceStore();
 
   return (
-    <div className="container mt-4 mx-auto">
+    <div className="container mt-4">
       <DataTable columns={columns} data={invoices} />
     </div>
   )
