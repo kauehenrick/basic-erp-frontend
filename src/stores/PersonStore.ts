@@ -32,7 +32,7 @@ type PersonStoreProps = {
     getPeople: () => void,
     addPerson: (person: Omit<PersonProps, "id" | "isActive">) => void,
     disablePerson: (person: PersonProps) => void,
-    updatePerson: (person: Omit<PersonProps, "isActive">) => void,
+    updatePerson: (person: Partial<Omit<PersonProps, "id" | "isActive">> & { id: number }) => void,
 };
 
 export const usePersonStore = create<PersonStoreProps>((set) => ({
@@ -63,9 +63,13 @@ export const usePersonStore = create<PersonStoreProps>((set) => ({
                 .single();
 
             if (error) {
-                toast("Erro ao cadastrar pessoa!");
-                set({ error });
-                return;
+                if (error.code === "23505") {
+                    toast("Já existe uma pessoa com esse CPF/CNPJ!");
+                } else {
+                    toast("Erro ao cadastrar pessoa!");
+                    set({ error });
+                    return;
+                }
             }
 
             set((state) => ({

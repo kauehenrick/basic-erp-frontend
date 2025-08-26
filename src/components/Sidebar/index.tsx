@@ -8,6 +8,7 @@ import { useSidebarStore } from "@/stores/SidebarStore";
 import { PiBarcodeLight, PiCirclesThreePlusLight, PiGearLight, PiHouseLight, PiInvoiceLight, PiNewspaperClippingLight, PiUserLight } from "react-icons/pi";
 import logo from "../../assets/logo.webp";
 import MenuOption from "../ui/menu-option";
+import { PiUserCircleFill } from "react-icons/pi";
 
 export default function Sidebar() {
     const { selectedOption } = useSidebarStore();
@@ -68,10 +69,13 @@ export default function Sidebar() {
                 </section>
             </div>
 
-            <div className="flex flex-col items-center mb-2 text-xs">
-                <p>tenant</p>
-                <p>versão: 0.0.1</p>
-            </div>
+            <footer className="flex items-center ms-4 mb-4 text-xs gap-3">
+                <PiUserCircleFill className="cursor-pointer" size={'2.5rem'} />
+                <div>
+                    <p>tenant</p>
+                    <p>versão: 0.0.1</p>
+                </div>
+            </footer>
         </aside>
     );
 }

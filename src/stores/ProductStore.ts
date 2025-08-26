@@ -27,7 +27,7 @@ type ProductStoreProps = {
     getProducts: () => void,
     addProduct: (product: Omit<ProductProps, "id" | "isActive">) => void,
     disableProduct: (product: ProductProps) => void,
-    updateProduct: (product: Omit<ProductProps, "isActive">) => void,
+    updateProduct: (person: Partial<Omit<ProductProps, "id" | "isActive">> & { id: number }) => void,
 };
 
 export const useProductStore = create<ProductStoreProps>((set) => ({
