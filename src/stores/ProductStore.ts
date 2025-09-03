@@ -27,7 +27,7 @@ type ProductStoreProps = {
     getProducts: () => void,
     addProduct: (product: Omit<ProductProps, "id" | "isActive">) => void,
     disableProduct: (product: ProductProps) => void,
-    updateProduct: (person: Partial<Omit<ProductProps, "id" | "isActive">> & { id: number }) => void,
+    updateProduct: (product: ProductProps) => void,
 };
 
 export const useProductStore = create<ProductStoreProps>((set) => ({
@@ -50,86 +50,7 @@ export const useProductStore = create<ProductStoreProps>((set) => ({
             set({ error: err });
         }
     },
-
-    addProduct: async (product) => {
-        try {
-            const { data, error } = await supabase
-                .from("products")
-                .insert([{ ...product, isActive: true }])
-                .select()
-                .single();
-
-            if (error) {
-                toast("Erro ao cadastrar produto!");
-                set({ error });
-                return;
-            }
-
-            set((state) => ({
-                products: [...state.products, data],
-                error: null,
-            }));
-
-            toast("Produto cadastrado!");
-        } catch (error) {
-            toast("Erro inesperado ao cadastrar produto!");
-            set({ error });
-        }
-    },
-
-    disableProduct: async (product) => {
-        try {
-            const { data, error } = await supabase
-                .from("products")
-                .update({ isActive: false })
-                .eq("id", product.id)
-                .select()
-                .single();
-
-            if (error) {
-                toast("Erro ao desabilitar produto!");
-                set({ error });
-                return;
-            }
-
-            set((state) => ({
-                products: state.products.map((p) =>
-                    p.id === product.id ? data : p
-                ),
-                error: null,
-            }));
-
-            toast("Produto desabilitado!");
-        } catch (error) {
-            toast("Erro inesperado ao desabilitar produto!");
-            set({ error });
-        }
-    },
-
-    updateProduct: async (product) => {
-        try {
-            const { data, error } = await supabase
-                .from("products")
-                .update(product)
-                .eq("id", product.id)
-                .select()
-                .single();
-
-            if (error) {
-                toast("Erro ao editar produto!");
-                set({ error });
-                return;
-            }
-
-            set((state) => ({
-                products: state.products.map((p) => (p.id === product.id ? data : p)),
-                error: null,
-            }));
-
-            toast("Produto editado!");
-        } catch (error) {
-            toast("Erro inesperado ao editar produto!");
-            set({ error });
-        }
-    },
+    addProduct: () => { },
+    disableProduct: () => { },
+    updateProduct: () => { },
 }));

@@ -32,7 +32,7 @@ type PersonStoreProps = {
     getPeople: () => void,
     addPerson: (person: Omit<PersonProps, "id" | "isActive">) => void,
     disablePerson: (person: PersonProps) => void,
-    updatePerson: (person: Partial<Omit<PersonProps, "id" | "isActive">> & { id: number }) => void,
+    updatePerson: (person: PersonProps) => void,
 };
 
 export const usePersonStore = create<PersonStoreProps>((set) => ({
@@ -54,87 +54,7 @@ export const usePersonStore = create<PersonStoreProps>((set) => ({
             set({ error: err });
         }
     },
-    addPerson: async (person) => {
-        try {
-            const { data, error } = await supabase
-                .from("people")
-                .insert([{ ...person, isActive: true }])
-                .select()
-                .single();
-
-            if (error) {
-                if (error.code === "23505") {
-                    toast("Já existe uma pessoa com esse CPF/CNPJ!");
-                } else {
-                    toast("Erro ao cadastrar pessoa!");
-                    set({ error });
-                    return;
-                }
-            }
-
-            set((state) => ({
-                people: [...state.people, data],
-                error: null,
-            }));
-
-            toast("Pessoa cadastrada!");
-        } catch (error) {
-            toast("Erro inesperado ao cadastrar pessoa!");
-            set({ error });
-        }
-    },
-    disablePerson: async (person) => {
-        try {
-            const { data, error } = await supabase
-                .from("people")
-                .update({ isActive: false })
-                .eq("id", person.id)
-                .select()
-                .single();
-
-            if (error) {
-                toast("Erro ao desabilitar pessoa!");
-                set({ error });
-                return;
-            }
-
-            set((state) => ({
-                people: state.people.map((p) =>
-                    p.id === person.id ? data : p
-                ),
-                error: null,
-            }));
-
-            toast("Pessoa desabilitada!");
-        } catch (error) {
-            toast("Erro inesperado ao desabilitar pessoa!");
-            set({ error });
-        }
-    },
-    updatePerson: async (person) => {
-        try {
-            const { data, error } = await supabase
-                .from("people")
-                .update(person)
-                .eq("id", person.id)
-                .select()
-                .single();
-
-            if (error) {
-                toast("Erro ao editar pessoa!");
-                set({ error });
-                return;
-            }
-
-            set((state) => ({
-                people: state.people.map((p) => (p.id === person.id ? data : p)),
-                error: null,
-            }));
-
-            toast("Pessoa editada!");
-        } catch (error) {
-            toast("Erro inesperado ao editar pessoa!");
-            set({ error });
-        }
-    },
+    addPerson: () => { },
+    disablePerson: () => { },
+    updatePerson: () => { },
 }))
